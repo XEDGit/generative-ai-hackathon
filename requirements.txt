@@ -1,0 +1,6 @@
+openai==0.25.0
+Pillow==9.3.0
+requests==2.25.1
+streamlit==1.15.2
+utils==1.0.1
+whisper==1.1.10
