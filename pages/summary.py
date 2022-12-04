@@ -103,11 +103,7 @@ if st.button("Save", disabled=dis_save):
 	else:
 		st.session_state["index"] = 0
 	i = st.session_state["index"]
-	with open("keys/openai.txt") as f:
-		openai.api_key = f.read().strip("\n")
-		if not openai.api_key:
-			raise Exception("Add keys/openai.txt for specifying the key")
-		f.close()
+	openai.api_key = st.secrets["openai"]
 	img = openai.Image.create(
 		prompt=summary,
 		n=1,
