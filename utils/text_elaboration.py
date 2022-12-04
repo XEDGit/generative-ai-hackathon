@@ -4,7 +4,7 @@ from cohere.classify import Example
 with open("keys/cohere.txt") as f:
     key = f.read()
     if not key:
-        raise Exception("Add keys/openai.txt for specifying the key")
+        raise Exception("Add keys/cohere.txt for specifying the key")
     co = cohere.Client(key.strip("\n"))
     f.close()
 
