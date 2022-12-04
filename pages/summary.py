@@ -10,12 +10,12 @@ import os
 st.set_page_config(initial_sidebar_state="collapsed")
 def write_edit():
 	del st.session_state["edit"]
-	with open("edit_transcript.txt", "w") as f:
+	with open("edit_transcript_{}.txt".format(st.session_state["uuid"]), "w") as f:
 		f.write(st.session_state["edit_text"])
 		f.close()
 
-og_path = "new_transcript.txt"
-edit_path = "edit_transcript.txt"
+og_path = "new_transcript_{}.txt".format(st.session_state["uuid"])
+edit_path = "edit_transcript_{}.txt".format(st.session_state["uuid"])
 if os.path.isfile(edit_path):
 	og_path = edit_path
 with open(og_path, "r") as f:
@@ -89,36 +89,37 @@ dis_save = True
 if all(name in st.session_state for name in ["summary", "tasks", "qa"]):
 	dis_save = False
 if st.button("Save", disabled=dis_save):
-	try:
-		os.remove("new_transcript.txt")
-		os.remove(edit_path)
-		del st.session_state["summary"]
-		del st.session_state["tasks"]
-		del st.session_state["qa"]
-		del st.session_state["edit"]
-	except:
-		pass
-	if "index" in st.session_state:
-		st.session_state["index"] = st.session_state.get("index") + 1
-	else:
-		st.session_state["index"] = 0
-	i = st.session_state["index"]
-	openai.api_key = st.secrets["openai"]
-	img = openai.Image.create(
-		prompt=summary,
-		n=1,
-		size="1024x1024"
-		)
-	response = requests.get(img['data'][0]['url'])
-	if response.status_code == 200:
-		fp = open(f"{i}.png", "wb")
-		fp.write(response.content)
-		fp.close()
-	if not os.path.isdir("db"):
-		os.mkdir("db")
-	with open(f"db/db{str(i)}.txt", "w") as f:
-		now = datetime.datetime.now()
-		date = now.strftime("%d/%m/%y")
-		f.write(f"{date}\n-\n{transcription}\n-\n{summary}\n-\n{tasks}\n-\n{qa}")
-		f.close()
-	nav_page("list")
+	with st.spinner("Saving"):
+		if "index" in st.session_state:
+			st.session_state["index"] = st.session_state.get("index") + 1
+		else:
+			st.session_state["index"] = 0
+		i = st.session_state["index"]
+		openai.api_key = st.secrets["openai"]
+		img = openai.Image.create(
+			prompt=summary,
+			n=1,
+			size="1024x1024"
+			)
+		response = requests.get(img['data'][0]['url'])
+		if response.status_code == 200:
+			fp = open("db/{}{}.png".format(i, st.session_state["uuid"]), "wb")
+			fp.write(response.content)
+			fp.close()
+		if not os.path.isdir("db"):
+			os.mkdir("db")
+		with open("db/db{}{}.txt".format(str(i), st.session_state["uuid"]), "w") as f:
+			now = datetime.datetime.now()
+			date = now.strftime("%d/%m/%y")
+			f.write(f"{date}\n-\n{transcription}\n-\n{summary}\n-\n{tasks}\n-\n{qa}")
+			f.close()
+		try:
+			os.remove("new_transcript_{}.txt".format(st.session_state["uuid"]))
+			os.remove(edit_path)
+			del st.session_state["summary"]
+			del st.session_state["tasks"]
+			del st.session_state["qa"]
+			del st.session_state["edit"]
+		except:
+			pass
+		nav_page("list")

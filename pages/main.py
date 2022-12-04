@@ -18,13 +18,12 @@ if audio_file:
         f.write(audio_file.getbuffer())
     transcription = ts_model.transcribe("audio.mp3")["text"]
     os.remove("audio.mp3")
-    with open("new_transcript.txt", "wb") as f:
+    with open("new_transcript_{}.txt".format(st.session_state["uuid"]), "wb") as f:
         f.write(bytes(transcription, encoding="utf8"))
         f.close()
-    i = -1
-    if "index" in st.session_state:
-        i = st.session_state["index"]
-    st.session_state.clear()
-    if i != -1:
-        st.session_state["index"] = i
+    keep = ["uuid", "index"]
+    for key in st.session_state:
+        if key in keep:
+            continue
+        del st.session_state[key]
     nav_page("summary")

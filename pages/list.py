@@ -7,7 +7,10 @@ st.title("Previous meetings:")
 if "index" in st.session_state:
 	num = st.session_state["index"]
 	for i in range(num + 1):
-		arr = retrieve_db(i)
+		try:
+			arr = retrieve_db(i)
+		except:
+			continue
 		st.header(f"Meeting {arr[0]}")
 		st.write(arr[2][:1000])
 		if st.button("Show more", key=f"button{str(i)}"):

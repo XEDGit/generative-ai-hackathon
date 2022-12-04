@@ -8,7 +8,7 @@ from PIL import Image
 st.set_page_config(initial_sidebar_state="collapsed")
 if "show" in st.session_state:
 	arr = retrieve_db(st.session_state["show"])
-	img_path = "{}.png".format(str(st.session_state["show"]))
+	img_path = "db/{}{}.png".format(str(st.session_state["show"]), st.session_state["uuid"])
 	if os.path.isfile(img_path):
 		img = Image.open(img_path)
 		w, h = img.size
@@ -28,8 +28,15 @@ if "show" in st.session_state:
 	st.write(arr[3])
 	st.header("Q&A")
 	st.write(arr[4])
-	if st.button("Email format"):
-		nav_page("email")
+	foot1, foot2 = st.columns(2)
+	with foot1:
+		if st.button("Email format"):
+			nav_page("email")
+	with foot2:
+		if st.button("Delete"):
+			os.remove(img_path)
+			os.remove("db/db{}{}.txt".format(str(st.session_state["show"]), st.session_state["uuid"]))
+			nav_page("list")
 else:
 	st.write("Informations to show not found")
 	if st.button("Back"):
