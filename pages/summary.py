@@ -105,7 +105,7 @@ if st.button("Save", disabled=dis_save):
 		if not os.path.isdir("db"):
 			os.mkdir("db")
 		if response.status_code == 200:
-			fp = open("db/{}{}.png".format(str(i), st.session_state["uuid"]), "w")
+			fp = open("db/{}{}.png".format(str(i), st.session_state["uuid"]), "wb")
 			fp.write(response.content)
 			fp.close()
 		with open("db/db{}{}.txt".format(str(i), st.session_state["uuid"]), "w") as f:
