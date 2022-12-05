@@ -4,6 +4,8 @@ from utils.retrieve_db import retrieve_db
 
 
 st.set_page_config(initial_sidebar_state="collapsed")
+if "uuid" not in st.session_state:
+	nav_page("main")
 if "show" in st.session_state:
 	arr = retrieve_db(st.session_state["show"])
 	st.write("Hello, here is the summary of the last meeting:")

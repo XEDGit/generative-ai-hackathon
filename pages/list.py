@@ -3,6 +3,8 @@ from utils.nav_page import nav_page
 from utils.retrieve_db import retrieve_db
 
 st.set_page_config(initial_sidebar_state="collapsed")
+if "uuid" not in st.session_state:
+	nav_page("main")
 st.title("Previous meetings:")
 if "index" in st.session_state:
 	num = st.session_state["index"]

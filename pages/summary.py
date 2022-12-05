@@ -14,6 +14,8 @@ def write_edit():
 		f.write(st.session_state["edit_text"])
 		f.close()
 
+if "uuid" not in st.session_state:
+	nav_page("main")
 og_path = "new_transcript_{}.txt".format(st.session_state["uuid"])
 edit_path = "edit_transcript_{}.txt".format(st.session_state["uuid"])
 if os.path.isfile(edit_path):

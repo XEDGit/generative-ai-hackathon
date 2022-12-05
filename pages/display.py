@@ -6,6 +6,8 @@ from PIL import Image
 
 
 st.set_page_config(initial_sidebar_state="collapsed")
+if "uuid" not in st.session_state:
+	nav_page("main")
 if "show" in st.session_state:
 	arr = retrieve_db(st.session_state["show"])
 	img_path = "db/{}{}.png".format(str(st.session_state["show"]), st.session_state["uuid"])

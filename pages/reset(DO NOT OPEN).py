@@ -1,4 +1,7 @@
 import os
 
-os.rmdir("db")
+try:
+    os.rmdir("db")
+except:
+    pass
 print("Cleaned")
