@@ -102,13 +102,12 @@ if st.button("Save", disabled=dis_save):
 			size="1024x1024"
 			)
 		response = requests.get(img['data'][0]['url'])
+		if not os.path.isdir("db"):
+			os.mkdir("db")
 		if response.status_code == 200:
 			fp = open("db/{}{}.png".format(str(i), st.session_state["uuid"]), "w")
 			fp.write(response.content)
 			fp.close()
-		print("trying db", os.path.isdir("db"))
-		if not os.path.isdir("db"):
-			os.mkdir("db")
 		with open("db/db{}{}.txt".format(str(i), st.session_state["uuid"]), "w") as f:
 			now = datetime.datetime.now()
 			date = now.strftime("%d/%m/%y")
