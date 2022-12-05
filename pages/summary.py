@@ -106,8 +106,8 @@ if st.button("Save", disabled=dis_save):
 			fp = open("db/{}{}.png".format(str(i), st.session_state["uuid"]), "w")
 			fp.write(response.content)
 			fp.close()
+		print("trying db", os.path.isdir("db"))
 		if not os.path.isdir("db"):
-			print("created db", os.path.isdir("db"))
 			os.mkdir("db")
 		with open("db/db{}{}.txt".format(str(i), st.session_state["uuid"]), "w") as f:
 			now = datetime.datetime.now()
