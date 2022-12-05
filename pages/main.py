@@ -2,8 +2,11 @@ import streamlit as st
 import os
 import whisper
 from utils.nav_page import nav_page
+import uuid
 
 st.set_page_config(initial_sidebar_state="collapsed")
+if "uuid" not in st.session_state:
+    st.session_state["uuid"] = str(uuid.uuid1())
 ts_model = whisper.load_model("base")
 col1, col2 = st.columns(2)
 with col1:
