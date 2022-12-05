@@ -10,21 +10,17 @@ import os
 st.set_page_config(initial_sidebar_state="collapsed")
 def write_edit():
 	del st.session_state["edit"]
-	with open("edit_transcript_{}.txt".format(st.session_state["uuid"]), "w") as f:
-		f.write(st.session_state["edit_text"])
-		f.close()
+	st.session_state["edit_transcript_{}.txt".format(st.session_state["uuid"])] = st.session_state["edit_text"]
 
 if "uuid" not in st.session_state:
 	nav_page("main")
 og_path = "new_transcript_{}.txt".format(st.session_state["uuid"])
 edit_path = "edit_transcript_{}.txt".format(st.session_state["uuid"])
-if os.path.isfile(edit_path):
+if edit_path in st.session_state:
 	og_path = edit_path
-with open(og_path, "r") as f:
-	transcription = f.read()
-	f.close()
+transcription = st.session_state[og_path]
 if not transcription:
-	raise Exception("File read failed")
+	raise Exception("No data found")
 st.title("Edit report")
 st.header("Transcription:")
 if "edit" not in st.session_state:
@@ -104,24 +100,29 @@ if st.button("Save", disabled=dis_save):
 			size="1024x1024"
 			)
 		response = requests.get(img['data'][0]['url'])
-		if not os.path.isdir("db"):
-			os.mkdir("db")
 		if response.status_code == 200:
-			fp = open("db/{}{}.png".format(str(i), st.session_state["uuid"]), "wb")
-			fp.write(response.content)
-			fp.close()
-		with open("db/db{}{}.txt".format(str(i), st.session_state["uuid"]), "w") as f:
+			st.session_state["{}{}.png".format(str(i), st.session_state["uuid"])] = response.content
 			now = datetime.datetime.now()
 			date = now.strftime("%d/%m/%y")
-			f.write(f"{date}\n-\n{transcription}\n-\n{summary}\n-\n{tasks}\n-\n{qa}")
-			f.close()
+			st.session_state["db{}{}.txt".format(str(i), st.session_state["uuid"])] = f"{date}\n-\n{transcription}\n-\n{summary}\n-\n{tasks}\n-\n{qa}"
 		try:
-			os.remove("new_transcript_{}.txt".format(st.session_state["uuid"]))
-			os.remove(edit_path)
 			del st.session_state["summary"]
+		except:
+			pass
+		try:
 			del st.session_state["tasks"]
+		except:
+			pass
+		try:
 			del st.session_state["qa"]
+		except:
+			pass
+		try:
 			del st.session_state["edit"]
+		except:
+			pass
+		try:
+			del st.session_state["new_transcript_{}.txt".format(st.session_state["uuid"])]
 		except:
 			pass
 		nav_page("list")

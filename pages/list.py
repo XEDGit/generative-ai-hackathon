@@ -19,7 +19,5 @@ if "index" in st.session_state:
 			st.session_state["show"] = i
 			nav_page("display")
 		st.write("__________________________________")
-else:
-	st.write("Nothing to show")
 if st.button("Create new"):
 	nav_page("main")

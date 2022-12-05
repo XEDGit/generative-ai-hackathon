@@ -3,10 +3,8 @@ import streamlit as st
 def retrieve_db(i):
 	if "uuid" not in st.session_state:
 		return ["Error: no uuid" * 6]
-	with open("db/db{}{}.txt".format(i, st.session_state["uuid"]), "r") as f:
-		content = f.read()
-		f.close()
+	content = st.session_state["db{}{}.txt".format(i, st.session_state["uuid"])]
 	if not content:
-		raise Exception("File read failed")
+		raise Exception("Data not found")
 	arr = content.split('-')
 	return arr
