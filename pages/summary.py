@@ -103,7 +103,7 @@ if st.button("Save", disabled=dis_save):
 			)
 		response = requests.get(img['data'][0]['url'])
 		if response.status_code == 200:
-			fp = open("db/{}{}.png".format(i, st.session_state["uuid"]), "wb")
+			fp = open("db/{}{}.png".format(str(i), st.session_state["uuid"]), "w")
 			fp.write(response.content)
 			fp.close()
 		if not os.path.isdir("db"):
